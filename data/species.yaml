@@ -1,0 +1,130 @@
+# The single source for every species the count reads. Python (src/igc/table.py) reads
+# this file directly; Lean reads lean/IGC/Generated/Table.lean, generated from it by
+# src/igc/codegen.py -- nobody edits the generated file by hand (tests/test_codegen.py
+# checks a hash of this file against one embedded in it).
+#
+# Conventions, stated before any entry:
+#   - Fermions are entered as Weyl fermions. Dirac and Majorana counts, where they
+#     matter, are derived from a Weyl count, never entered separately.
+#   - `real_components` counts a species' own covariant (off-shell) field components,
+#     one entry per real field -- the convention the heat-kernel trace in
+#     `citation` is stated in. It is NOT what the horizon count uses; that is
+#     `entanglement` below, a separate column with its own citation.
+#   - `curvature_trace` is E = tr(endomorphism)/R in each species' own operator, exact
+#     (a rational, never a float): 0 for minimal coupling, and a fixed value for
+#     fermions and vectors forced by their own operator, not a free parameter. A
+#     scalar's curvature coupling is the one free parameter here; the coupling bound
+#     treats it as a variable rather than as a separate row.
+#   - A species' one-loop weight is `statistics_sign * (real_components - 6 *
+#     curvature_trace)`, split into a kinetic part (`statistics_sign * real_components`)
+#     and a curvature insertion (`-6 * curvature_trace * statistics_sign`). This is
+#     computed, never entered -- see src/igc/count.py.
+#   - `conventional_cross_checks` below are independently-cited values the computed
+#     weight must reproduce. They are not derived from the rows above; that is the
+#     point of carrying them separately -- without them the formula would have nothing
+#     to be wrong against. Cited at the combined gauge-sector level (a vector with its
+#     two ghosts), since that is how both sources state it.
+#   - `entanglement` is each species' coefficient in the horizon's entanglement
+#     entropy, in units of one minimally coupled real scalar: 1 for a scalar; 1 for a
+#     Weyl fermion, whose two physical degrees of freedom count half each, as
+#     fermions do (a Dirac fermion counts 2, Kabat1995); 2 for a gauge field's two
+#     physical polarizations; 0 for a ghost, unphysical by construction. It is NOT a
+#     count of physical degrees of freedom, which for a Weyl fermion is 2. It is what
+#     the entanglement side of the horizon count sums.
+#   - `contact` is the contact term with the horizon, the part of a species' horizon
+#     entropy that is not entanglement. Only the gauge sector has one (Kabat1995): -6
+#     per gauge field in units of one minimal scalar, ghosts included, carried on the
+#     vector row because that is how the source states it -- the vector alone and its
+#     ghosts alone are not separated there. Every other row is 0. It is cited, not
+#     derived, so `entanglement + contact == weight` is a check across three
+#     independently cited columns (tests/test_species_table.py), not a definition. It
+#     holds for each non-gauge row, and for each gauge field taken with its two
+#     ghosts -- not for the vector or ghost row alone. Summed over a branch it therefore
+#     holds exactly when every vector carries its two ghosts (condition K2).
+#   - Each of the Standard Model's twelve vectors counts as one abelian gauge field for
+#     these columns: at one loop on a purely gravitational background, which is the
+#     setting here, that is exact. Kabat1995 states the contact term for an abelian
+#     field.
+
+species:
+  minimal_scalar:
+    statistics_sign: 1
+    real_components: 1
+    curvature_trace: "0"
+    entanglement: 1
+    contact: 0
+    citation: BirrellDavies1982
+    horizon_citation: Kabat1995
+  weyl_fermion:
+    statistics_sign: -1
+    real_components: 2
+    curvature_trace: "1/2"
+    entanglement: 1
+    contact: 0
+    citation: BirrellDavies1982
+    horizon_citation: Kabat1995
+  vector:
+    statistics_sign: 1
+    real_components: 4
+    curvature_trace: "1"
+    entanglement: 2
+    contact: -6
+    citation: BirrellDavies1982
+    horizon_citation: Kabat1995
+  ghost:
+    statistics_sign: -1
+    real_components: 1
+    curvature_trace: "0"
+    entanglement: 0
+    contact: 0
+    citation: BirrellDavies1982
+    horizon_citation: Kabat1995
+
+# Independently-cited totals the computed weight must reproduce (see the note above).
+# `species` maps a species name to its multiplicity in the combination being checked.
+conventional_cross_checks:
+  citations: [BrodaSzanecki2009, Kabat1995]
+  checks:
+    - name: "a minimally coupled scalar"
+      species: {minimal_scalar: 1}
+      weight: 1
+    - name: "a Weyl fermion"
+      species: {weyl_fermion: 1}
+      weight: 1
+    - name: "a gauge field with its two ghosts"
+      species: {vector: 1, ghost: 2}
+      weight: -4
+
+# The content, entered by its parts. Every content the count reads -- the Standard
+# Model, its neutrino variants, the scan over generations and doublets -- is derived
+# from these, never entered as a list of multiplicities (src/igc/table.py's `content`,
+# and the generated `smContent` in Lean). A content with g generations, h Higgs
+# doublets and nu right-handed neutrinos carries, of each species:
+#     gauge_group + per_gauge_vector * (the gauge group's vectors)
+#       + per_generation * g + per_doublet * h + per_right_handed_neutrino * nu
+#   - gauge_group: twelve vectors for SU(3) x SU(2) x U(1), 8 + 3 + 1.
+#   - per_gauge_vector: two ghosts per vector, so that every gauge field carries its
+#     ghosts by construction (condition K2's pairing).
+#   - per_generation: fifteen Weyl fermions -- a quark doublet and two quark singlets
+#     in three colours (6 + 3 + 3), a lepton doublet and a charged-lepton singlet
+#     (2 + 1) -- with no right-handed neutrino.
+#   - per_doublet: four real scalars.
+#   - per_right_handed_neutrino: one Weyl fermion.
+# The Standard Model is three generations and one doublet: 4 scalars, 45 Weyl
+# fermions, 12 vectors and 24 ghosts, the content Broda & Szanecki count.
+content:
+  citations: [PDG2024, BrodaSzanecki2009]
+  gauge_group: {vector: 12}
+  per_gauge_vector: {ghost: 2}
+  per_generation: {weyl_fermion: 15}
+  per_doublet: {minimal_scalar: 4}
+  per_right_handed_neutrino: {weyl_fermion: 1}
+  standard_model: {generations: 3, doublets: 1}
+
+# The Standard Model at three neutrino contents: none, two and three right-handed
+# neutrinos added. Which content the world carries is not settled, so all three are
+# carried rather than choosing one.
+branches:
+  "0_extra_neutrinos": {right_handed_neutrinos: 0}
+  "2_extra_neutrinos": {right_handed_neutrinos: 2}
+  "3_extra_neutrinos": {right_handed_neutrinos: 3}

@@ -1,0 +1,7 @@
+{
+  "_comment": "Frozen target values, from the originating theory's computation, not generated from the code they check. Counts are exact; the cutoff is a float printed there to four decimals.",
+  "generation_counts_one_doublet": {"0": "-44", "1": "-29", "2": "-14", "3": "1", "4": "16", "5": "31", "6": "46"},
+  "count_one_solutions": [[3, 1]],
+  "count_one_solutions_with_a_neutrino_per_generation": [],
+  "cutoff_over_planck_unit_moment_unit_count": {"value": 6.14, "printed_to": 0.0001}
+}

@@ -1,0 +1,23 @@
+{
+  "_comment": "Frozen target values, computed by hand from data/species.yaml before this file was written, not generated from the code it checks. Exact fractions as strings, never rounded floats.",
+  "branches": {
+    "0_extra_neutrinos": {
+      "K": "-62", "I": "63", "net": "1",
+      "threshold": "124/21", "margin": "1/63",
+      "entanglement": "73", "contact": "-72",
+      "coupling_bound": "1/24"
+    },
+    "2_extra_neutrinos": {
+      "K": "-66", "I": "69", "net": "3",
+      "threshold": "132/23", "margin": "1/23",
+      "entanglement": "75", "contact": "-72",
+      "coupling_bound": "1/8"
+    },
+    "3_extra_neutrinos": {
+      "K": "-68", "I": "72", "net": "4",
+      "threshold": "17/3", "margin": "1/18",
+      "entanglement": "76", "contact": "-72",
+      "coupling_bound": "1/6"
+    }
+  }
+}

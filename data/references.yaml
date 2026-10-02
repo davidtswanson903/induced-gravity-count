@@ -1,0 +1,318 @@
+# Every source this repository cites, in one place. Nothing in data/species.yaml or
+# anywhere else holds a citation string that is not also here.
+
+Sakharov1967:
+  type: article
+  authors: ["A. D. Sakharov"]
+  title: "Vacuum quantum fluctuations in curved space and the theory of gravitation"
+  journal: "Doklady Akademii Nauk SSSR"
+  volume: "177"
+  pages: "70-71"
+  year: 1967
+  note: >
+    Reprinted in General Relativity and Gravitation 32 (2000) 365. The mechanism:
+    Einstein's action as the change in the action of the vacuum's quantum fluctuations
+    when space is curved.
+
+Visser2002:
+  type: article
+  authors: ["Matt Visser"]
+  title: "Sakharov's induced gravity: a modern perspective"
+  journal: "Modern Physics Letters A"
+  volume: "17"
+  pages: "977"
+  year: 2002
+  eprint: "gr-qc/0204062"
+  note: >
+    The modern review of induced gravity, including the caution behind K3: with a
+    regulator that is not Lorentz-invariant, the induced action's time and space
+    derivative terms need not agree.
+
+Tanaka1996:
+  type: article
+  authors: ["Masahiro Tanaka"]
+  title: "Three generations or more for an attractive gravity?"
+  journal: "Physical Review D"
+  volume: "53"
+  pages: "6941"
+  year: 1996
+  eprint: "hep-ph/9504259"
+  note: >
+    In supersymmetric models vector multiplets induce a negative Newton constant and
+    scalar multiplets a positive one, so that three or more generations are needed for
+    attraction. The precedent for this repository's generation floor, by a different
+    count in a different model.
+
+BezrukovShaposhnikov2008:
+  type: article
+  authors: ["Fedor L. Bezrukov", "Mikhail Shaposhnikov"]
+  title: "The Standard Model Higgs boson as the inflaton"
+  journal: "Physics Letters B"
+  volume: "659"
+  pages: "703-706"
+  year: 2008
+  eprint: "0710.3755"
+  note: >
+    Inflation from the Standard Model's Higgs with a large non-minimal coupling to
+    curvature, xi of about 49000 sqrt(lambda) (eq. 13). Its convention puts the conformal
+    coupling at minus one sixth (footnote 1), the opposite sign to this repository's, so
+    its coupling raises the count rather than lowering it, and the coupling bound does
+    not exclude it.
+
+FramptonGlashowYanagida2002:
+  type: article
+  authors: ["Paul H. Frampton", "Sheldon L. Glashow", "Tsutomu Yanagida"]
+  title: "Cosmological sign of neutrino CP violation"
+  journal: "Physics Letters B"
+  volume: "548"
+  pages: "119-121"
+  year: 2002
+  eprint: "hep-ph/0208157"
+  note: >
+    The minimal seesaw, with two right-handed neutrinos: the least number that gives
+    the two non-zero neutrino masses the observed oscillations need, and the reason the
+    neutrino rows are none, two and three.
+
+AtkinsCalmet2013:
+  type: article
+  authors: ["Michael Atkins", "Xavier Calmet"]
+  title: "Bounds on the Nonminimal Coupling of the Higgs Boson to Gravity"
+  journal: "Physical Review Letters"
+  volume: "110"
+  pages: "051301"
+  year: 2013
+  eprint: "1211.0281"
+  note: >
+    The Higgs boson's curvature coupling, bounded from collider data only far above the
+    scale of the coupling bound: the reason the bound constrains models rather than
+    meeting a measurement.
+
+AmatiVeneziano1981:
+  type: article
+  authors: ["D. Amati", "G. Veneziano"]
+  title: "Metric from matter"
+  journal: "Physics Letters B"
+  volume: "105"
+  pages: "358"
+  year: 1981
+  note: >
+    Inducing both the gravitational and the gauge couplings from the matter content.
+
+DonnellyWall2015:
+  type: article
+  authors: ["William Donnelly", "Aron C. Wall"]
+  title: "Entanglement entropy of electromagnetic edge modes"
+  journal: "Physical Review Letters"
+  volume: "114"
+  pages: "111603"
+  year: 2015
+  eprint: "1412.1895"
+  note: >
+    The gauge field's contact term read as the entanglement entropy of edge modes. The
+    coefficient is the one Kabat1995 states; the reading differs, and the count uses
+    only the coefficient.
+
+Solodukhin2011:
+  type: article
+  authors: ["Sergey N. Solodukhin"]
+  title: "Entanglement entropy of black holes"
+  journal: "Living Reviews in Relativity"
+  volume: "14"
+  pages: "8"
+  year: 2011
+  eprint: "1104.3712"
+  note: >
+    The review of entanglement entropy of black holes, including its relation to the
+    induced gravitational coupling and the gauge fields' contact terms.
+
+BirrellDavies1982:
+  type: book
+  authors: ["N. D. Birrell", "P. C. W. Davies"]
+  title: "Quantum Fields in Curved Space"
+  publisher: "Cambridge University Press"
+  year: 1982
+  note: >
+    Chapter 6. The standard reference for each species' own Seeley-DeWitt heat-kernel
+    coefficient: a minimally-coupled scalar's zero curvature coupling, a Weyl
+    fermion's fixed 1/2 (from the Lichnerowicz formula for the squared Dirac
+    operator), and a massless vector's fixed 1. Used in data/species.yaml for every
+    species row's curvature_trace column.
+
+BrodaSzanecki2009:
+  type: article
+  authors: ["Boguslaw Broda", "Michal Szanecki"]
+  title: "Induced gravity and gauge interactions revisited"
+  journal: "Physics Letters B"
+  volume: "674"
+  pages: "64-68"
+  year: 2009
+  eprint: "0809.4203"
+  note: >
+    Eq. (8), L1 = -(1/12pi)(N0 + N_{1/2} - 4 N1)(1/16piG) R, and its appendix Table 2:
+    the induced-gravity species-weight formula applied to the Standard Model, with a
+    scalar weighted +1, a Weyl fermion +1, and a gauge field together with its two
+    ghosts -4. One of two independent citations for data/species.yaml's
+    conventional_cross_checks (with Kabat1995). Also the source, via its own citation
+    to Akama (1981) and Tanaka (1996), for this being an already-studied question --
+    see docs/related-work.md.
+
+Kabat1995:
+  type: article
+  authors: ["Daniel Kabat"]
+  title: "Black Hole Entropy and Entropy of Entanglement"
+  journal: "Nuclear Physics B"
+  volume: "453"
+  pages: "281-302"
+  year: 1995
+  eprint: "hep-th/9503016"
+  note: >
+    Sec. 1 gives the coefficient c1 of the Einstein-Hilbert term each species induces:
+    1/6 for a minimally coupled scalar, 2^[d/2]/12 for a Dirac fermion, (d-2)/6 - 1 for
+    an abelian gauge field including ghosts -- in units of one minimal scalar at d=4,
+    1 per Weyl fermion and -4 per gauge field. The second independent citation for
+    data/species.yaml's conventional_cross_checks. Sec. 3 computes the gauge field's
+    free energy as (d-2) scalars plus a separate contact term with the horizon (a path
+    integral over particle paths beginning and ending on it), whose coefficient is the
+    -1 in c1: -6 per gauge field in scalar units. That is data/species.yaml's contact
+    column, and the (d-2) = 2 physical polarizations are its entanglement coefficient for the
+    vector. For spin 0 and 1/2 there is no contact term: black hole entropy equals
+    entanglement entropy. Kabat treats an abelian field; at one loop on a purely
+    gravitational background each of the Standard Model's twelve vectors counts as
+    one.
+
+LarsenWilczek1996:
+  type: article
+  authors: ["Finn Larsen", "Frank Wilczek"]
+  title: "Renormalization of Black Hole Entropy and of the Gravitational Coupling Constant"
+  journal: "Nuclear Physics B"
+  volume: "458"
+  pages: "249-266"
+  year: 1996
+  eprint: "hep-th/9506066"
+  note: >
+    The quantum correction to black hole entropy and the renormalization of Newton's
+    constant carry the same divergence, so that renormalizing the constant renders the
+    entropy finite. The proportionality the horizon count rests on: the horizon
+    entropy count and the induced coupling count are the same count, read two ways.
+    Cited for that identification, which this repository imports rather than proves.
+
+PDG2024:
+  type: article
+  authors: ["S. Navas et al. (Particle Data Group)"]
+  title: "Review of Particle Physics"
+  journal: "Physical Review D"
+  volume: "110"
+  pages: "030001"
+  year: 2024
+  note: >
+    The Standard Model's content: the gauge group SU(3) x SU(2) x U(1), three
+    generations of quarks and leptons, and one Higgs doublet. Cited for
+    data/species.yaml's content block -- twelve gauge vectors, fifteen Weyl fermions per
+    generation without a right-handed neutrino, and four real scalars per doublet.
+
+Vassilevich2003:
+  type: article
+  authors: ["D. V. Vassilevich"]
+  title: "Heat kernel expansion: user's manual"
+  journal: "Physics Reports"
+  volume: "388"
+  pages: "279-360"
+  year: 2003
+  eprint: "hep-th/0306138"
+  note: >
+    Eq. (2.21): the heat trace of a Laplace-type operator on a closed manifold has an
+    asymptotic expansion in powers of t as t -> 0. Eqs. (4.26)-(4.27): its first two
+    coefficients, a0 = (4pi)^(-n/2) int tr(1) and a2 = (4pi)^(-n/2) (1/6) int tr(6E + R)
+    for D = -(g^{mu nu} nabla_mu nabla_nu + E); with the curvature term written with
+    the opposite sign, as in data/species.yaml, the second is (4pi)^(-n/2) int tr(R/6 - E).
+    Imported as lean/IGC/SpectralTrace.lean's HeatTrace and InducedNewton.lean's
+    Background. Eq. (4.8), the variation of a coefficient under D -> D - eps F, is what
+    lean/IGC/OneToSix.lean derives, for a constant insertion, rather than imports.
+
+ChamseddineConnes1997:
+  type: article
+  authors: ["Ali H. Chamseddine", "Alain Connes"]
+  title: "The spectral action principle"
+  journal: "Communications in Mathematical Physics"
+  volume: "186"
+  pages: "731-750"
+  year: 1997
+  eprint: "hep-th/9606001"
+  note: >
+    Eqs. (2.14)-(2.15): the cutoff trace of a function of an operator expands in its
+    heat-kernel coefficients, each weighted by a moment of the function (f2 = int chi(u)
+    du for the curvature term), stated in four dimensions for a positive cutoff
+    function. The spectral action's cutoff, like K1's, sits in an operator.
+
+vanSuijlekom2024:
+  type: book
+  authors: ["Walter D. van Suijlekom"]
+  title: "Noncommutative Geometry and Particle Physics"
+  publisher: "Springer, Mathematical Physics Studies, 2nd edition, open access"
+  year: 2024
+  doi: "10.1007/978-3-031-59120-4"
+  note: >
+    Section 9.2, Proposition 9.7: for a profile that is a Laplace-Stieltjes transform
+    of a suitable measure, the cutoff trace expands in any dimension with the moments
+    int f(v) v^(beta-1) dv, divided by Gamma. One of the statements of the general-
+    profile expansion that lean/IGC/SpectralTrace.lean's SpectralActionA1 imports for
+    profiles outside the proper-time class, where it is proved instead.
+
+EcksteinIochum2018:
+  type: book
+  authors: ["Michal Eckstein", "Bruno Iochum"]
+  title: "Spectral Action in Noncommutative Geometry"
+  publisher: "Springer, SpringerBriefs in Mathematical Physics 27"
+  year: 2018
+  eprint: "1902.05306"
+  note: >
+    Corollary 3.33, eq. (3.43): the cutoff trace's expansion with the moments
+    int x^(alpha-1) f(x) dx, for profiles that are Laplace transforms of signed
+    measures. Section 2.3: the sharp cutoff's lower-order terms are accessible only
+    once it is traded for a gentler one. The second statement of the general-profile
+    expansion SpectralActionA1 imports.
+
+EstradaGraciaBondiaVarilly1998:
+  type: article
+  authors: ["Ricardo Estrada", "José M. Gracia-Bondía", "Joseph C. Várilly"]
+  title: "On summability of distributions and spectral geometry"
+  journal: "Communications in Mathematical Physics"
+  volume: "191"
+  pages: "219-248"
+  year: 1998
+  eprint: "funct-an/9702001"
+  note: >
+    Section 6: the cutoff trace's expansion for Schwartz profiles, and, for the sharp
+    cutoff (the eigenvalue count), only in the Cesaro sense: "the expansion beyond the
+    first piece is only valid in the Cesaro sense". The third statement of the
+    general-profile expansion, and the source for the sharp cutoff's scope.
+
+FrolovFursaevZelnikov1997:
+  type: article
+  authors: ["V. P. Frolov", "D. V. Fursaev", "A. I. Zelnikov"]
+  title: "Statistical origin of black hole entropy in induced gravity"
+  journal: "Nuclear Physics B"
+  volume: "486"
+  pages: "339-352"
+  year: 1997
+  eprint: "hep-th/9607104"
+  note: >
+    Eq. (2.10): the Euclidean induced action carries -(1/16piG) int sqrt(g) R. Eq.
+    (2.19): 1/G = (1/12pi)[sum_s (1 - 6 xi_s) ... + 2 sum_d ...], so minimally coupled
+    scalars and fermions induce a positive 1/G, as in data/species.yaml's weights. The
+    sign convention lean/IGC/InducedNewton.lean's InducesNewton fixes.
+
+SwansonIGC:
+  type: misc
+  self: true
+  authors: ["David T. Swanson"]
+  title: "induced-gravity-count: the Standard Model's induced Newton constant, counted exactly"
+  publisher: "Zenodo"
+  version: "0.1.0"
+  url: "https://github.com/davidtswanson903/induced-gravity-count"
+  year: 2026
+  note: >
+    This repository, the source of every number in the paper. Its archived release has
+    a DOI, given in the `doi` field here and in `.zenodo.json` once the archive exists;
+    until then the entry cites the repository's address. Not listed in the related-work
+    document, which lists sources outside it.

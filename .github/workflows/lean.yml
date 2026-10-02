@@ -1,0 +1,46 @@
+# The Lean project: build it with Mathlib restored from its cache (never built from
+# source), then audit the axioms every headline theorem rests on.
+name: lean
+
+on:
+  push:
+    paths: ["lean/**", ".github/workflows/lean.yml"]
+  pull_request:
+    paths: ["lean/**", ".github/workflows/lean.yml"]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: lean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the pinned toolchain
+        run: |
+          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz | tar xz
+          ./elan-init -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Mathlib's cache, never a source build
+        run: |
+          lake exe cache get
+          echo "::notice::Mathlib restored from cache"
+
+      - name: Build
+        run: lake build
+
+      - name: Axiom audit
+        # Every headline theorem may rest on the standard three axioms and nothing
+        # else -- no sorryAx, and no Lean.ofReduceBool (which native_decide leaves).
+        run: |
+          lake env lean Audit.lean | tee audit.log
+          allowed='(propext|Classical\.choice|Quot\.sound)'
+          if grep "depends on axioms" audit.log \
+              | grep -vE "depends on axioms: \[${allowed}(, ${allowed})*\]$"; then
+            echo "::error::a headline theorem depends on an axiom beyond the standard three"
+            exit 1
+          fi

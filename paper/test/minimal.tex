@@ -1,0 +1,100 @@
+% A minimal document proving build/latex/ and build/figures/ compile under the paper's
+% class, with every package the paper will use -- not a draft of the paper.
+% Build: make paper-test   (runs make latex figures first)
+\documentclass[aps,prd,twocolumn,nofootinbib]{revtex4-2}
+\usepackage{amsmath,amssymb}
+% No `array` (nor siunitx, which loads it): under revtex4-2 in this toolchain it breaks
+% every p{} column ("Extra \or"). revtex4-2's own tabular handles p{} and @{} columns.
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\graphicspath{{../../build/figures/}}
+\input{../../build/latex/numbers.tex}
+
+\begin{document}
+
+\title{Integration-feed test}
+\author{induced-gravity-count}
+\date{\today}
+\begin{abstract}
+This document proves the paper's feed compiles under its class, with every package the
+paper will use; it is not a draft of the paper.
+\end{abstract}
+\maketitle
+
+\section{Numbers in running text}
+
+In units of one minimally coupled scalar, the kinetic parts sum to \smKinetic{} and the
+curvature insertions to \smInsertion{}, a net of \smNet{}. The count is positive exactly
+when the insertion's weighting exceeds \smThreshold{}~$\approx$~\smThresholdDecimal{};
+the cutoff gives six, a margin of \smMarginPct{}. Entanglement \smEntanglement{} and the
+contact term \smContact{} give the same net. With one doublet the count runs
+\genCountZero, \genCountOne, \genCountTwo{} and \genCountThree{} for zero to three
+generations, and attraction bounds the Higgs doublet's common coupling by
+$\xi<{}$\smCouplingBound. The Standard Model needs a cutoff from \smCutoffLow{} to
+\smCutoffHigh{}\,$M_P$. Citations resolve:
+\cite{Sakharov1967,BrodaSzanecki2009,Tanaka1996,Kabat1995}.
+
+\section{A paragraph column}
+
+\begin{tabular}{p{0.35\columnwidth}p{0.5\columnwidth}}
+\toprule
+Column & Wrapped text \\
+\midrule
+first & A paragraph column, the kind the array package breaks under this class. \\
+\bottomrule
+\end{tabular}
+
+\section{Tables}
+
+\begin{table*}
+\caption{The conditions.}
+\centering
+\input{../../build/latex/tables/conditions.tex}
+\end{table*}
+
+\begin{table*}
+\caption{Each species' weight.}
+\centering
+\input{../../build/latex/tables/species.tex}
+\end{table*}
+
+\begin{table*}
+\caption{The Standard Model's count, species by species.}
+\centering
+\input{../../build/latex/tables/count.tex}
+\end{table*}
+
+\begin{table}
+\caption{The neutrino rows.}
+\centering
+\input{../../build/latex/tables/neutrinos.tex}
+\end{table}
+
+\begin{table}
+\caption{The magnitude, by profile and content.}
+\centering
+\input{../../build/latex/tables/magnitude.tex}
+\end{table}
+
+\section{Figures}
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{generations.pdf}
+\caption{The count against the number of generations, one doublet.}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{criterion.pdf}
+\caption{The count against the insertion's weighting, for each neutrino content.}
+\end{figure}
+
+\section{Every number}
+
+\input{../../build/latex/gallery.tex}
+
+\nocite{*}
+\bibliography{../../build/latex/refs}
+
+\end{document}

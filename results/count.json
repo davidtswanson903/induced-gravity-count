@@ -1,0 +1,136 @@
+{
+  "branches": {
+    "0_extra_neutrinos": {
+      "K": "-62",
+      "I": "63",
+      "net": "1",
+      "positive": true,
+      "threshold": "124/21",
+      "margin": "1/63",
+      "entanglement": "73",
+      "contact": "-72",
+      "by_species": {
+        "minimal_scalar": {
+          "multiplicity": 4,
+          "kinetic": "4",
+          "insertion": "0",
+          "weight": "4",
+          "entanglement": 4,
+          "contact": 0
+        },
+        "weyl_fermion": {
+          "multiplicity": 45,
+          "kinetic": "-90",
+          "insertion": "135",
+          "weight": "45",
+          "entanglement": 45,
+          "contact": 0
+        },
+        "vector": {
+          "multiplicity": 12,
+          "kinetic": "48",
+          "insertion": "-72",
+          "weight": "-24",
+          "entanglement": 24,
+          "contact": -72
+        },
+        "ghost": {
+          "multiplicity": 24,
+          "kinetic": "-24",
+          "insertion": "0",
+          "weight": "-24",
+          "entanglement": 0,
+          "contact": 0
+        }
+      }
+    },
+    "2_extra_neutrinos": {
+      "K": "-66",
+      "I": "69",
+      "net": "3",
+      "positive": true,
+      "threshold": "132/23",
+      "margin": "1/23",
+      "entanglement": "75",
+      "contact": "-72",
+      "by_species": {
+        "minimal_scalar": {
+          "multiplicity": 4,
+          "kinetic": "4",
+          "insertion": "0",
+          "weight": "4",
+          "entanglement": 4,
+          "contact": 0
+        },
+        "weyl_fermion": {
+          "multiplicity": 47,
+          "kinetic": "-94",
+          "insertion": "141",
+          "weight": "47",
+          "entanglement": 47,
+          "contact": 0
+        },
+        "vector": {
+          "multiplicity": 12,
+          "kinetic": "48",
+          "insertion": "-72",
+          "weight": "-24",
+          "entanglement": 24,
+          "contact": -72
+        },
+        "ghost": {
+          "multiplicity": 24,
+          "kinetic": "-24",
+          "insertion": "0",
+          "weight": "-24",
+          "entanglement": 0,
+          "contact": 0
+        }
+      }
+    },
+    "3_extra_neutrinos": {
+      "K": "-68",
+      "I": "72",
+      "net": "4",
+      "positive": true,
+      "threshold": "17/3",
+      "margin": "1/18",
+      "entanglement": "76",
+      "contact": "-72",
+      "by_species": {
+        "minimal_scalar": {
+          "multiplicity": 4,
+          "kinetic": "4",
+          "insertion": "0",
+          "weight": "4",
+          "entanglement": 4,
+          "contact": 0
+        },
+        "weyl_fermion": {
+          "multiplicity": 48,
+          "kinetic": "-96",
+          "insertion": "144",
+          "weight": "48",
+          "entanglement": 48,
+          "contact": 0
+        },
+        "vector": {
+          "multiplicity": 12,
+          "kinetic": "48",
+          "insertion": "-72",
+          "weight": "-24",
+          "entanglement": 24,
+          "contact": -72
+        },
+        "ghost": {
+          "multiplicity": 24,
+          "kinetic": "-24",
+          "insertion": "0",
+          "weight": "-24",
+          "entanglement": 0,
+          "contact": 0
+        }
+      }
+    }
+  }
+}

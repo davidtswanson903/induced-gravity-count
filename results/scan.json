@@ -1,0 +1,41 @@
+{
+  "generation_counts": {
+    "0": "-44",
+    "1": "-29",
+    "2": "-14",
+    "3": "1"
+  },
+  "counts_to_six_generations": {
+    "0": "-44",
+    "1": "-29",
+    "2": "-14",
+    "3": "1",
+    "4": "16",
+    "5": "31",
+    "6": "46"
+  },
+  "floor": {
+    "doublets": 1,
+    "least_generations": 3,
+    "positive_from_there": true,
+    "searched_generations": 12
+  },
+  "count_one": {
+    "searched": {
+      "generations": 12,
+      "doublets": 20
+    },
+    "solutions": [
+      [
+        3,
+        1
+      ]
+    ],
+    "solutions_with_a_neutrino_per_generation": []
+  },
+  "extensions": {
+    "one_boson": "-3",
+    "one_boson_and_complex_scalar": "-1",
+    "matter_per_boson": "4"
+  }
+}

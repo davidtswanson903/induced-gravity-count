@@ -1,0 +1,956 @@
+\documentclass[aps,prd,reprint,amsmath,amssymb,superscriptaddress,nofootinbib]{revtex4-2}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage{orcidlink}
+% No `array` (nor siunitx, which loads it): under revtex4-2 in this toolchain it breaks
+% every p{} column. See paper/README.md.
+
+% ---------------------------------------------------------------------------
+% Every number in this paper is \input from the repository's build, never typed by
+% hand; see paper/README.md. \claim{<key>} marks where each result appears, mapping it to
+% its row in the repository's CLAIMS.md and giving the Lean table its section column.
+\input{../../build/latex/numbers.tex}
+\graphicspath{{../../build/figures/}}
+
+\newcommand{\Nnet}{N_{\mathrm{net}}}
+\newcommand{\Nkin}{N_{\mathrm{kin}}}
+\newcommand{\Nins}{N_{\mathrm{ins}}}
+\makeatletter
+\newcommand{\claim}[1]{\expandafter\xdef\csname igc@claim@#1\endcsname{\thesection}}
+\newcommand{\claimsection}[1]{\@ifundefined{igc@claim@#1}{--}{\csname igc@claim@#1\endcsname}}
+\makeatother
+
+\begin{document}
+
+\title{When induced gravity attracts: an exact count for the Standard Model}
+
+\author{David T. Swanson~\orcidlink{0009-0003-0580-6476}}
+\noaffiliation
+
+\date{\today}
+
+\begin{abstract}
+In induced gravity, Newton's constant arises from the one-loop vacuum energy of
+matter, and its sign is the sign of a sum over species, $\Nnet=\sum\sigma(N-6c)$,
+with $\sigma$ the statistics sign, $N$ the number of field components and $cR$ the
+trace of the curvature term in the species' own fluctuation operator. Under a
+spectral cutoff taken in each species' own operator, $\Nnet$ is \smNet{} for the
+Standard Model with the Higgs minimally coupled, in units of one minimally coupled
+scalar, the value an earlier species count also reaches. Its kinetic parts $\sigma N$
+sum to \smKinetic{} and its curvature insertions $-6\sigma c$ to \smInsertion{}. The
+cutoff weights each insertion at exactly six times its kinetic part, for every cutoff
+function of bounded variation, so the count is exact and does not depend on the cutoff
+function; the sign would reverse only at a weighting of \smThreshold{}, \smMarginPct{}
+below six, which only a cutoff departing from this condition could reach. The chain
+from the regulated action to the sign is proved for proper-time cutoffs, and for other
+cutoff functions rests on the spectral-action expansion as the literature states it. A
+horizon-entropy count, entanglement \smEntanglement{} against the gauge fields' contact
+term \smContact{}, agrees with it species by species, a consistency check on the
+species table. The count is an integer and \smNet{} is its least positive value; with
+the Standard Model's gauge group, three generations and one Higgs doublet are the only
+content of whole generations and doublets that reaches it. Attraction begins at
+\floorGenerationsSpelled{} generations, a floor rather than a selection. The count
+requires the Higgs doublet's common curvature coupling to stay below
+\smCouplingBound{}, and keeps its sign for every number of right-handed neutrinos. If
+Newton's constant is entirely induced, as Sakharov proposed, the count becomes a
+condition on content, much as anomaly cancellation is: each gauge boson below the cutoff
+must be paid for by \matterPerBosonSpelled{} Weyl fermions or minimally coupled real
+scalars, and a conformally coupled Higgs doublet is excluded, while Higgs inflation,
+whose coupling has the other sign, is not. The counts and the identities they rest on
+are machine-checked in Lean.
+\end{abstract}
+
+\maketitle
+
+% =============================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Sakharov proposed that the Einstein action is not fundamental: it is the change in
+the one-loop action of quantum fields when spacetime is curved~\cite{Sakharov1967}.
+Amati and Veneziano extended the idea to the gauge couplings, inducing them from the
+same matter content~\cite{AmatiVeneziano1981}, and Visser reviews the mechanism in
+modern form~\cite{Visser2002}. In each version the coefficient of $\int\!\sqrt{g}\,R$
+in the induced action is a sum over species, each weighted by the first
+heat-kernel coefficient of its own operator~\cite{BirrellDavies1982,Vassilevich2003}.
+
+That makes the \emph{sign} of the induced Newton constant the sign of a sum over
+species, the net count $\Nnet$ of Eq.~\eqref{eq:net}. Each species contributes a
+kinetic part, from the Laplacian acting on its field components, and a curvature
+insertion, from the curvature term in its own operator. For the fermions and the
+gauge fields the two have opposite signs (for minimally coupled scalars and for
+ghosts the insertion vanishes), so whether the matter we have induces attractive
+gravity depends on what that matter is. In units of one minimally coupled scalar, a
+scalar counts \weightScalar{}, a Weyl fermion \weightWeyl{}, and a gauge field with
+its two ghosts \weightGaugeField{}. The Standard Model's \smScalars{} scalars and
+\smWeyl{} Weyl fermions give \smNetWithoutGauge{}, its \gaugeVectors{} gauge fields
+\smGaugeSector{}, and the net is \smNet{}. Figure~\ref{fig:generations} shows the
+count for the Standard Model's gauge group, one Higgs doublet, and any number of
+generations.
+
+\begin{figure}[t]
+\includegraphics[width=\columnwidth]{generations.pdf}
+\caption{The net count $\Nnet$ of Eq.~\eqref{eq:net}, in units of one minimally
+coupled scalar, against the number of generations, with the Standard Model's gauge
+group and one Higgs doublet. Gravity attracts exactly when $\Nnet>0$. The count is
+negative up to two generations and positive from three on, where it is
+\genCountThree{} (marked, since the bar is too short to see).}
+\label{fig:generations}
+\end{figure}
+
+The count has been made before. Tanaka computed the induced Einstein action in
+supersymmetric models, found that vector multiplets induce a negative Newton constant
+and scalar multiplets a positive one, and concluded that the minimal supersymmetric
+Standard Model and minimal supersymmetric SU(5) need three generations or more for
+attractive gravity~\cite{Tanaka1996}. Broda and Szanecki weighted the species exactly
+as here, under a Planckian proper-time cutoff~\cite{BrodaSzanecki2009}. For the
+Standard Model with its Higgs doublet and twelve gauge fields, their combination of
+species equals one, and they note that the black hole's geometric entropy carries the
+same combination. They call the gauge fields' contribution disputable, since the
+gauge fields are themselves induced. The net count of this paper is therefore not
+new.
+
+What this paper adds is the count's structure, and its conditions. Resolved into its
+parts, the kinetic parts sum to \smKinetic{} and the curvature insertions to
+\smInsertion{}. The weighting that the cutoff gives the insertions is exactly six for
+every profile of bounded variation, by an identity between the profile's moments, so
+the count is exact and the profile cannot change it; for proper-time profiles, the
+heat kernel's among them, the whole chain from the regulated action to the sign is
+proved, the one-to-six ratio derived rather than quoted (Sec.~\ref{sec:weights},
+Appendices~\ref{app:setup}--\ref{app:onetosix}). An exact criterion locates the
+boundary: the sign reverses at a weighting of \smThreshold, \smMarginPct{} below six,
+which only a cutoff departing from that condition could reach (Sec.~\ref{sec:count}).
+A horizon-entropy count agrees with the count species by species, a consistency check
+on the species table and on condition K2 (Sec.~\ref{sec:horizon}). The count is an
+integer, so \smNet{} is the least positive value it can take, and with the gauge group
+given, the Standard Model's generations and doublet are the only content of whole
+generations and Higgs doublets that reaches it. The same count gives a floor on the
+number of generations, a bound on the Higgs doublet's curvature coupling, and the
+effect of right-handed neutrinos (Sec.~\ref{sec:corollaries}). Under Sakharov's
+premise that Newton's constant is entirely induced, it becomes a condition on content:
+gauge bosons must be paid for in matter, and a conformally coupled Higgs doublet is
+excluded (Sec.~\ref{sec:forbids}).
+Every count, and the identities behind them, is machine-checked in Lean and
+cross-checked against a second implementation, both reading one table of species
+with a citation for each entry (Sec.~\ref{sec:lean}).
+
+The paper does not claim the magnitude of Newton's constant, which moves with the
+cutoff's scale and the profile's shape and is reported only as a range
+(Sec.~\ref{sec:magnitude}). Nor does it claim anything about an induced graviton's
+dynamics, or about the vacuum energy (Sec.~\ref{sec:unsettled}).
+
+% =============================================================================
+\section{The conditions}
+\label{sec:conditions}
+
+The count is made under four conditions, stated in Table~\ref{tab:conditions}. Of
+the four, K1 is the one the sign depends on; K2 decides whether the count is
+\smNetWithoutGauge{} or \smNet; K3 and K4 limit what is claimed.
+
+\begin{table*}
+\caption{The conditions the count is made under.}
+\label{tab:conditions}
+\centering
+\input{../../build/latex/tables/conditions.tex}
+\end{table*}
+
+Under K1, with the cutoff taken in each species' own fluctuation operator, the
+curvature term of that operator enters the heat kernel's first coefficient on the
+same footing as the Laplacian, and the insertion carries the same moment of the
+cutoff function as the kinetic part (Sec.~\ref{sec:weights}). A cutoff placed in
+another operator can reweight the insertion, and the criterion of
+Sec.~\ref{sec:count} then decides whether the sign survives.
+
+Condition K2 takes the gauge fields as fundamental fields up to the cutoff, each with
+its two ghosts and its contact term with the horizon. It is the condition Broda and
+Szanecki question, since the gauge fields may themselves be
+induced~\cite{BrodaSzanecki2009}. Without the gauge fields the Standard Model's count
+would be \smNetWithoutGauge{}; counting them with their ghosts adds \smGaugeSector{}
+and brings it to \smNet{}. K2 therefore leaves the sign positive and brings the count
+to its least positive value.
+
+The regulator here is covariant. Condition K3 records that what is computed is the
+coefficient of $\int\!\sqrt g\,R$ in the Euclidean action on a fixed background, not
+an induced graviton's propagation, whose time and space derivative terms a
+non-covariant regulator could treat differently~\cite{Visser2002}. Condition K4 sets
+the cosmological term aside.
+
+\paragraph{Further assumptions.}
+Besides K1 to K4, the count assumes: free massless fields on a purely gravitational
+background; a closed Euclidean background with $\int\!\sqrt g\,R\neq0$, which makes the
+induced coefficient unique; a cutoff function whose moment $M_f$ (Eq.~\eqref{eq:moment})
+is positive, which holds for every proper-time cutoff and every non-increasing one;
+each gauge vector in Feynman gauge with its two Faddeev--Popov ghosts, counted as an
+abelian field, which is exact at one loop on a purely gravitational background, with
+the dependence on the gauge parameter not examined; and, for the main result, a
+minimally coupled Higgs. Appendix~\ref{app:setup} states each in the form the proofs
+use.
+
+% =============================================================================
+\section{Each species' weight}
+\label{sec:weights}
+
+A \emph{species} is a field with its own fluctuation operator; the Faddeev--Popov
+ghosts count as species of their own, and a \emph{content} is a list of species with
+their multiplicities. Each species' fluctuation operator is of Laplace type,
+$D=D_0+X$ with $D_0=-\nabla^2$ acting on $N$ field components, and a curvature term
+$X$ whose trace is $\operatorname{tr}X=cR$. Its heat trace has the
+expansion~\cite{Vassilevich2003}
+\begin{equation}
+\operatorname{Tr}e^{-\tau D}=\tau^{-d/2}\bigl[a_0+a_1\tau+O(\tau^2)\bigr],
+\label{eq:heat}
+\end{equation}
+whose curvature coefficient is
+\begin{equation}
+a_1=(4\pi)^{-d/2}\Bigl(\frac{N}{6}-c\Bigr)\!\int\!\sqrt{g}\,R .
+\label{eq:a1}
+\end{equation}
+The Euclidean one-loop action of a content is
+$W=\tfrac12\sum_i\sigma_i\log\det D_i$, with $\sigma_i$ the statistics sign. The
+cutoff of K1 regulates the logarithm species by species: $\log\det D$ is replaced by
+$-\operatorname{Tr}f(D/\Lambda^2)$, for a cutoff function $f$ (the \emph{profile}),
+such as the sharp step $\theta(1-u)$, the heat kernel's own $e^{-u}$, or a Gaussian
+$e^{-u^2}$. So $W_f(\Lambda)=-\tfrac12\sum_i\sigma_i\operatorname{Tr}f(D_i/\Lambda^2)$.
+At order $\Lambda^{d-2}$ each trace carries the heat kernel's $a_1$ times one moment
+of the profile~\cite{ChamseddineConnes1997,vanSuijlekom2024,EcksteinIochum2018,
+EstradaGraciaBondiaVarilly1998},
+\begin{equation}
+M_f=\frac{1}{\Gamma(s)}\int_0^\infty f(u)\,u^{s-1}\,du ,\qquad s=\frac d2-1 ,
+\label{eq:moment}
+\end{equation}
+normalized to the heat kernel's own profile, for which $M_{e^{-u}}=1$. In the
+Euclidean convention $W\supset-(16\pi G)^{-1}\!\int\!\sqrt{g}\,R$~\cite{FrolovFursaevZelnikov1997},
+the induced coupling is then
+\begin{equation}
+\frac{1}{16\pi G}=\frac{M_f}{12\,(4\pi)^{d/2}}\,\Nnet\,\Lambda^{d-2},
+\label{eq:newton}
+\end{equation}
+with the content's net count
+\begin{equation}
+\Nnet=\sum_i\sigma_i\,(N_i-6c_i),
+\label{eq:net}
+\end{equation}
+so the sign of $G$ is the sign of $\Nnet$ for every profile with a positive moment,
+and gravity attracts exactly when $\Nnet>0$.
+
+\claim{species-weight}%
+Each species' weight $\sigma(N-6c)$ is the sum of a \emph{kinetic part} $\sigma N$,
+from $D_0$, and a \emph{curvature insertion} $-6\sigma c$, from $X$.
+Table~\ref{tab:species} gives the four species the count needs. The weights reproduce
+the cited values: \weightScalar{} for a minimal scalar, \weightWeyl{} for a Weyl
+fermion, and \weightGaugeField{} for a gauge field with its two
+ghosts~\cite{BrodaSzanecki2009,Kabat1995}. The conventions are in
+Appendix~\ref{app:counts}.
+
+\begin{table*}
+\caption{Each species' statistics sign $\sigma$, field components $N$, curvature trace
+$c$ and weight, with its coefficient in a horizon's entanglement entropy and its
+contact term with the horizon (Sec.~\ref{sec:horizon}), both in units of one minimally
+coupled real scalar. The entanglement coefficient is not a count of physical degrees
+of freedom: a Weyl fermion has two, which count half each, as fermions do. The
+contact term is Kabat's~\cite{Kabat1995}.}
+\label{tab:species}
+\centering
+\input{../../build/latex/tables/species.tex}
+\end{table*}
+
+The claim that the profile cannot change the sign rests on two steps, with different
+scopes.
+
+\paragraph{Step 1: the moments.}
+\claim{one-to-six}\claim{profile-family-weighting}%
+The insertion can be read in two ways. In Eq.~\eqref{eq:a1} it is part of the full
+operator's coefficient, and carries the profile's moment $M_f$. Read instead as the
+first-order response of the cutoff trace to the curvature term,
+$\frac{d}{d\varepsilon}\operatorname{Tr}f\bigl((D_0+\varepsilon X)/\Lambda^2\bigr)$ at
+$\varepsilon=0$, as a perturbative treatment of $X$ would compute it, it carries the
+profile's \emph{derivative} moment, $-\int_0^\infty f'(u)\,u^{s}du$, divided by
+$\Gamma(s+1)$. The two agree because of an integration by parts,
+\begin{equation}
+-\int_0^\infty u^{s}\,df(u)=s\int_0^\infty f(u)\,u^{s-1}du ,
+\label{eq:parts}
+\end{equation}
+which holds for every profile whose derivative is a measure: every profile of
+bounded variation with finite moments, the sharp step included. For the sharp step,
+$f'=-\delta(u-1)$, the left side is one and the right side is $s\cdot(1/s)$. So the
+insertion's weight relative to the kinetic part is six for every profile of bounded
+variation (Appendix~\ref{app:onetosix}). This step is an identity between moments; it
+does not yet say that the moments are what the cutoff trace carries.
+
+\paragraph{Step 2: the expansion.}
+\claim{sign-profile-independent}%
+That the cutoff trace carries $M_f\,a_1$ at order $\Lambda^{d-2}$, so that the profile
+enters Eq.~\eqref{eq:newton} as one positive factor, is the large-$\Lambda$ expansion of
+$\operatorname{Tr}f(D/\Lambda^2)$ in heat-kernel coefficients. Its standing depends on
+the profile:
+\begin{itemize}
+\item For \emph{proper-time} profiles, $f(u)=\int e^{-tu}\,d\nu(t)$ with $\nu$ a finite
+measure on a bounded proper-time interval, the heat kernel's own profile among them,
+the expansion is a theorem: it follows from the heat trace alone
+(Appendix~\ref{app:abelian}). For them the two readings of the insertion are both
+computed and shown to agree, so the one-to-six ratio is derived, not quoted
+(Appendix~\ref{app:onetosix}), for an insertion that is constant over the background.
+\item For other \emph{Laplace-transform} profiles and for \emph{Schwartz} profiles the
+expansion is stated in the spectral-action
+literature~\cite{vanSuijlekom2024,EcksteinIochum2018,EstradaGraciaBondiaVarilly1998}.
+It is taken as a hypothesis for them, not proved. The spectral action of
+Ref.~\cite{ChamseddineConnes1997} likewise puts its cutoff in an operator, the Dirac
+operator, though there the cutoff trace defines the bosonic action rather than
+regulating each species' one-loop trace.
+\item For the \emph{sharp step} the identity~\eqref{eq:parts} holds exactly, but its
+cutoff trace has the expansion beyond the leading term only as a Ces\`aro
+mean~\cite{EstradaGraciaBondiaVarilly1998}: the subleading $\Lambda^{d-2}$ term exists
+only after averaging over the cutoff scale. The sharp step is therefore covered by
+Step~1, and by Step~2 only in that averaged sense.
+\end{itemize}
+
+% =============================================================================
+\section{The Standard Model's count}
+\label{sec:count}
+
+\paragraph{The count.}
+\claim{headline-count}\claim{standard-model-count}\claim{induced-newton-constant-positive}%
+The Standard Model with one Higgs doublet carries \smScalars{} real scalars,
+\smWeyl{} Weyl fermions in \smGenerations{} generations, \gaugeVectors{} gauge
+vectors and their \smGhosts{} ghosts~\cite{PDG2024}. Table~\ref{tab:count} gives the
+count species by species. The kinetic parts sum to $\Nkin=\smKinetic$ and the
+insertions to $\Nins=\smInsertion$, a net of \smNet{}: with the Higgs minimally
+coupled, the Standard Model induces a positive Newton constant under K1.
+
+\begin{table*}
+\caption{The Standard Model's count, species by species, in units of one minimally
+coupled scalar: each species' kinetic part is $m\sigma N$ and its insertion
+$-6m\sigma c$, for multiplicity $m$. The last two columns are the horizon count's
+(Sec.~\ref{sec:horizon}).}
+\label{tab:count}
+\centering
+\input{../../build/latex/tables/count.tex}
+\end{table*}
+
+\paragraph{The criterion.}
+\claim{criterion}\claim{criterion-margin}%
+Weight every species' insertion by $\rho$ in place of six. The count
+$\Nnet(\rho)=\Nkin+(\rho/6)\Nins$ is positive exactly when
+\begin{equation}
+\rho>\frac{6|\Nkin|}{\Nins}=\smThreshold\approx\smThresholdDecimal .
+\label{eq:criterion}
+\end{equation}
+Condition K1 gives $\rho=6$ for every profile of bounded variation, so under K1 $\rho$
+is not a free parameter and the count is exactly \smNet. The criterion locates the
+boundary instead. The \emph{margin}, the threshold's distance below six as a fraction
+of six, is $(6-\smThreshold)/6=\smMargin$, or \smMarginPct{}; it equals
+$\Nnet/\Nins$, the net count over the insertions' total, and is \nuTwoMargin{} and
+\nuThreeMargin{} with two and three right-handed neutrinos (Table~\ref{tab:neutrinos}).
+It is how far a scheme departing from K1 would have to lower the insertions' common
+weight to reverse the sign; no such scheme is analysed here. The criterion takes one
+$\rho$ for every species: a scheme that
+reweighted fermion and vector insertions differently, whose contributions have
+opposite signs, would need the criterion species by species.
+Figure~\ref{fig:criterion} shows the count against $\rho$ for the Standard Model with
+no, two and three right-handed neutrinos (Sec.~\ref{sec:corollaries}).
+
+\begin{figure}[t]
+\includegraphics[width=\columnwidth]{criterion.pdf}
+\caption{The net count against $\rho$, the weight of every species' curvature
+insertion relative to its kinetic part (Eq.~\eqref{eq:criterion}), for the Standard
+Model with no, two and three right-handed neutrinos. Each line crosses zero at its
+content's threshold (dots): \smThreshold, \nuTwoThreshold{} and \nuThreeThreshold{}
+respectively. The cutoff of K1 gives $\rho=6$ (dashed).}
+\label{fig:criterion}
+\end{figure}
+
+% =============================================================================
+\section{The horizon route}
+\label{sec:horizon}
+
+\claim{horizon-independent-route}\claim{horizon-count}%
+Larsen and Wilczek showed that the one-loop correction to a black hole's entropy and
+the renormalization of Newton's constant carry the same
+divergence~\cite{LarsenWilczek1996}. In induced gravity, the horizon entropy is the
+fields' entanglement entropy less contact terms with the
+horizon~\cite{FrolovFursaevZelnikov1997}, and once $G$ is the induced constant, the
+Bekenstein--Hawking entropy $A/4G$ requires the two counts to agree. Each species
+enters the entanglement entropy with a coefficient that, in units of one real scalar,
+is $1$ for a scalar, $1$ for a Weyl fermion (whose two physical degrees of freedom
+count half each, as fermions do), $2$ for a gauge field's two polarizations, and $0$
+for a ghost (Table~\ref{tab:species}). A gauge field adds a contact term with the
+horizon, \contactPerGaugeField{} in units of one minimal scalar~\cite{Kabat1995},
+which Donnelly and Wall read as the entanglement of edge
+modes~\cite{DonnellyWall2015}; the count uses only its coefficient, which the two
+readings share. Solodukhin reviews both relations~\cite{Solodukhin2011}.
+
+The last two columns of Table~\ref{tab:count} give the Standard Model's horizon count:
+entanglement \smEntanglement{} and contact term \smContact{}, a net of \smNet{}, as
+the proportionality requires. The agreement holds species by species. A gauge field
+costs four by either route: in the induced count its weight \weightVector{} and its two
+ghosts' \weightGhost{} each, and in the horizon count its two polarizations and its
+contact term \contactPerGaugeField. The agreement therefore holds for every content
+whose vectors each carry their two ghosts. It is a
+consistency check on the species table and on condition K2, not independent evidence
+for the sign of the Standard Model's count. Broda and Szanecki note the same
+agreement for the geometric entropy, their name for the entanglement
+entropy~\cite{BrodaSzanecki2009}.
+
+% =============================================================================
+\section{Corollaries}
+\label{sec:corollaries}
+
+A content with the Standard Model's gauge group, $g$ generations, $h$ Higgs doublets
+and $n$ right-handed neutrinos has the count
+\begin{equation}
+\Nnet=\weylPerGeneration\,g+\scalarsPerDoublet\,h+n\smGaugeSector ,
+\label{eq:content}
+\end{equation}
+the gauge sector contributing \smGaugeSector{}. The floor, the least content and the
+right-handed neutrinos' effect hold for every $g$, $h$ and $n$; the coupling bound is
+stated for the Standard Model, and in general form in Appendix~\ref{app:counts}.
+
+\paragraph{A floor on generations.}
+\claim{generation-floor}%
+With one doublet, the count runs \genCountZero, \genCountOne, \genCountTwo{} and
+\genCountThree{} for zero to three generations (Fig.~\ref{fig:generations}), and it is
+positive for every number of generations from
+\floorGenerationsSpelled{} on. Attraction begins at \floorGenerationsSpelled{}
+generations. That is a floor, not a selection: every larger number also attracts.
+Tanaka found the same floor for supersymmetric contents~\cite{Tanaka1996}; here it
+holds for the Standard Model's own content, with the gauge fields counted, and three
+generations clear it by one.
+
+\paragraph{The least content.}
+\claim{unique-least-content}%
+The count is an integer, so \smNet{} is the least positive value it can take. Among
+contents of whole generations and Higgs doublets with this gauge group, the only one
+that reaches it is \countOneGenerationsSpelled{} generations and
+\countOneDoubletsSpelled{} doublet. By Eq.~\eqref{eq:content} a count of one
+needs $\weylPerGeneration\,g+\scalarsPerDoublet\,h=\countOneNeeds$, which allows at
+most three generations, and of those only three with one doublet solves it. With a
+right-handed neutrino in every generation, every term of the count is a multiple of
+four, so no such content has a count of one. Both statements hold for every number of
+generations and doublets; Appendix~\ref{app:counts} gives the finite search that
+cross-checks them. Other representations are outside the statement: adding singlet
+scalars, for instance, would give other contents of count one.
+
+\paragraph{The Higgs coupling.}
+\claim{coupling-bound}%
+Give the doublet's \smScalars{} real scalars a common coupling $\xi$ to curvature,
+with $\xi=0$ minimal and $\xi=1/6$ conformal~\cite{BirrellDavies1982}. Each scalar's
+curvature trace becomes $\xi$, and the count falls by $6\xi$ per scalar. Attraction
+then requires
+\begin{equation}
+\xi<\smCouplingBound ,
+\end{equation}
+strictly, since the count vanishes at the bound. With two and three right-handed
+neutrinos the bound rises to \nuTwoCouplingBound{} and \nuThreeCouplingBound. A
+coupling below the bound, of either sign, keeps the count positive; what the bound
+excludes, if gravity is induced, is taken up in Sec.~\ref{sec:forbids}.
+
+\paragraph{Right-handed neutrinos.}
+\claim{neutrino-margins}%
+\claim{neutrino-sign-robust}%
+Each right-handed neutrino adds one to the count. With two the count is \nuTwoNet,
+the threshold \nuTwoThreshold{} and the margin \nuTwoMarginPct; with three,
+\nuThreeNet, \nuThreeThreshold{} and \nuThreeMarginPct{} (Table~\ref{tab:neutrinos}).
+The rows are none, the Standard Model's own content; two, the least number that gives
+the two non-zero neutrino masses the observed oscillations need~\cite{PDG2024}, as in
+the minimal seesaw of Frampton, Glashow and Yanagida~\cite{FramptonGlashowYanagida2002};
+and three, one per generation. Eq.~\eqref{eq:content} gives the count for any number,
+and the sign holds for every one.
+
+\begin{table}
+\caption{The Standard Model with $\nu_R$ right-handed neutrinos added: the count, the
+threshold weighting, the margin, and the bound on the Higgs doublet's common curvature
+coupling.}
+\label{tab:neutrinos}
+\centering
+\input{../../build/latex/tables/neutrinos.tex}
+\end{table}
+
+% =============================================================================
+\section{The magnitude, and why it is not claimed}
+\label{sec:magnitude}
+
+\claim{magnitude-range}%
+In four dimensions Eq.~\eqref{eq:newton} gives the cutoff at which a content induces
+Newton's constant,
+\begin{equation}
+\Lambda=M_P\sqrt{\frac{12\pi}{M_f\,\Nnet}} ,\qquad M_P=G^{-1/2}.
+\end{equation}
+The profile's moment is one for the sharp step and for the heat kernel, and
+\momentGaussian{} for the Gaussian $e^{-u^2}$ (Appendix~\ref{app:magnitude}). For the
+Standard Model the required cutoff ranges from \smCutoffLow{} to
+\smCutoffHigh{}\,$M_P$ over these profiles (Table~\ref{tab:magnitude}), and
+right-handed neutrinos lower it. That a net of one needs a cutoff a few times the
+Planck mass is the same statement as Broda and Szanecki's coefficient $1/12\pi$ at a
+Planckian cutoff~\cite{BrodaSzanecki2009}. The paper does not predict the cutoff's
+scale or its profile; given them, this equation fixes the magnitude. The magnitude
+moves with the profile. The sign does not.
+
+\begin{table}
+\caption{The profile's moment $M_f$ and the cutoff in Planck units, by profile and
+number of right-handed neutrinos $\nu_R$. The heat kernel's row rests on the proved
+expansion, the Gaussian's on the imported one for Schwartz profiles; the sharp step's
+moment is exact, but its expansion beyond the leading term holds only as a Ces\`aro
+mean (Appendix~\ref{app:magnitude}).}
+\label{tab:magnitude}
+\centering
+\input{../../build/latex/tables/magnitude.tex}
+\end{table}
+
+% =============================================================================
+\section{What the count forbids, if gravity is induced}
+\label{sec:forbids}
+
+Everything so far concerns the sign of the curvature term a content induces. It becomes
+a constraint on content under one further premise: that Newton's constant is
+\emph{entirely} induced, with no bare term, by the species lighter than the cutoff. That
+is Sakharov's premise~\cite{Sakharov1967}, and this paper does not argue for it. Without
+it, a bare term can carry the sign, and the count gives only the sign of matter's
+contribution to $1/G$; nothing below is then forbidden. With it, and under K1 to K4, a
+content whose count is not positive induces no attractive gravity. The count then acts
+as a condition on what the content can be, much as anomaly cancellation does: it
+excludes contents without predicting a number. Unlike anomaly cancellation, it holds
+only under the premise.
+
+\paragraph{Gauge bosons must be paid for.}
+\claim{gauge-boson-cost}\claim{extension-rule}%
+A gauge boson with its two ghosts contributes \weightGaugeField{} by either route
+(Sec.~\ref{sec:horizon}), and a Weyl fermion or a minimally coupled real scalar
+contributes \weightScalar. A content of these species therefore has
+$\Nnet=n_{\text{scalar}}+n_{\text{Weyl}}-\matterPerBoson\,n_{\text{vector}}$, the
+combination of Broda and Szanecki~\cite{BrodaSzanecki2009}, and the Standard Model,
+with a count of \smNet, has one unit to spare. Hence:
+\begin{itemize}
+\item the Standard Model with one further gauge boson below the cutoff, and nothing
+else, has count \smPlusOneBoson;
+\item with a complex scalar added, minimally coupled, to give that boson its mass, the
+count is \smPlusBosonAndHiggs;
+\item the Standard Model extended by $b$ gauge bosons and $k$ further Weyl fermions or
+minimally coupled real scalars has a count $k-\matterPerBoson\,b$ above the Standard
+Model's, and attracts exactly when $k\ge\matterPerBoson\,b$
+(Appendix~\ref{app:counts}).
+\end{itemize}
+Each new gauge boson must bring \matterPerBosonSpelled{} such fields with it. Under the
+premise this bears on every extension with a new gauge boson, such as a dark photon or
+a $Z'$: its content below the cutoff must pay for its bosons. A boson's mass does not
+change what it costs. A mass $\mu$ shifts each species' operator by the constant
+$\mu^2$, which changes $a_1$ only by $-\mu^2a_0$ (Appendix~\ref{app:onetosix}), a
+multiple of the volume rather than of $\int\!\sqrt g\,R$; so at order $\Lambda^{d-2}$ a
+species lighter than the cutoff counts as a massless one does. The formal statements are
+for massless fields (Sec.~\ref{sec:unsettled}) and do not include this step.
+
+\paragraph{The Higgs doublet's curvature coupling.}
+\claim{conformal-higgs-excluded}%
+Under the premise the doublet's common coupling must satisfy $\xi<\smCouplingBound$
+(Sec.~\ref{sec:corollaries}). The conformal coupling lies above the bound: with the
+doublet conformally coupled, $\xi=1/6$, the Standard Model's count is
+\smConformalCount, so a conformally coupled Higgs doublet is excluded. Right-handed
+neutrinos leave this in place: with two the bound is \nuTwoCouplingBound, and with three
+it is \nuThreeCouplingBound, the conformal value itself, where the count vanishes.
+Higgs inflation is not excluded. It needs a large coupling, $\xi\approx49000\sqrt\lambda$
+in the convention of Ref.~\cite{BezrukovShaposhnikov2008}, which places the conformal
+coupling at $-1/6$. In this paper's convention the same coupling is large and negative,
+and it raises the count, by \smCouplingSlope{} per unit of $|\xi|$, rather than lowering
+it. The bound excludes large couplings of the conformal sign, not Higgs inflation's.
+
+\paragraph{What is not forbidden.}
+Further generations, right-handed neutrinos and minimally coupled Higgs doublets all
+raise the count, so it allows them. The floor of \floorGenerationsSpelled{} generations
+excludes only what observation already excludes.
+
+\paragraph{How the constraints meet observation.}
+Both constraints concern the complete content below the cutoff, which lies at a few
+Planck masses (Sec.~\ref{sec:magnitude}). The matter that pays for a gauge boson may lie
+anywhere below it, so no single discovery can violate the gauge-boson rule: a new gauge
+boson found without the matter to pay for it would only place that matter higher. The
+rule constrains complete models, which must list their content up to the cutoff. The
+coupling bound is likewise a constraint on models rather than a prediction for a
+measurement: collider data bound the Higgs boson's curvature coupling only at the order
+of $10^{15}$~\cite{AtkinsCalmet2013}, far above $\smCouplingBound$.
+
+% =============================================================================
+\section{What the count does not settle}
+\label{sec:unsettled}
+
+\paragraph{Whether gravity is induced.} The constraints of Sec.~\ref{sec:forbids} rest
+on Sakharov's premise that Newton's constant is entirely induced, which the paper
+states and does not argue for.
+
+\paragraph{The dynamical sector.} The count is the coefficient of
+$\int\!\sqrt g\,R$ on a fixed Euclidean background, not an induced graviton's
+propagation; with a regulator that is not Lorentz-invariant the two need not
+agree~\cite{Visser2002} (K3).
+
+\paragraph{The vacuum energy,} the cutoff trace's leading term, is set aside (K4).
+
+\paragraph{Beyond one loop.} The count is the one-loop coefficient of massless fields
+on a purely gravitational background. Interactions, masses and higher loops are not
+included.
+
+\paragraph{Other cutoffs.} A cutoff taken in an operator other than the species'
+own fluctuation operator falls outside K1. Such a cutoff can move part of the
+curvature term out of the regulated operator, so the insertion's weight need no
+longer be six, and the count is not made for it here. The sharp step is covered
+only in the Ces\`aro sense noted in Sec.~\ref{sec:weights}.
+
+\paragraph{The content.} The main result takes the Higgs minimally coupled, and the
+corollaries range over whole generations, Higgs doublets and right-handed neutrinos,
+not over other representations.
+
+% =============================================================================
+\section{Machine-checked statements}
+\label{sec:lean}
+
+The counts and the identities above are stated and proved in Lean~4 with Mathlib.
+The Lean proofs use a species table generated from a data file; a second
+implementation, in Python, reads the same file, and the build fails if the two ever
+disagree on a count. The proofs contain no unproved steps (Lean's \texttt{sorry}) and
+no unverified evaluation (\texttt{native\_decide}), and use no axioms beyond Lean's
+standard three: propositional extensionality, choice and quotient soundness.
+
+What is proved: the weight's decomposition into kinetic part and insertion; the
+integration by parts~\eqref{eq:parts} for every profile of bounded variation; the
+expansion of the cutoff trace for proper-time profiles, from the heat trace alone;
+the one-to-six identity, with the insertion's first-order response computed; the
+induced coupling~\eqref{eq:newton} of any content; the Standard Model's and the
+horizon counts; the criterion; the floor and the least content, for every number of
+generations and doublets; the coupling bound, for every real $\xi$; the effect of
+right-handed neutrinos, for any number of them; the magnitude formula with the three
+profiles' moments; and the cost of a gauge boson by both routes, the count of every
+content of scalars, Weyl fermions and gauge vectors, and the Standard Model's
+extensions and its conformally coupled Higgs doublet, with the Newton constant each
+induces.
+
+What is imported, as hypotheses the theorems take rather than as axioms: the heat
+trace's expansion and its first coefficients~\cite{Vassilevich2003}; the cutoff
+trace's expansion for profiles outside the proper-time class~\cite{vanSuijlekom2024,
+EcksteinIochum2018,EstradaGraciaBondiaVarilly1998}; and the species table's entries,
+including the contact term~\cite{Kabat1995}. The sign convention for the induced
+coupling is a definition~\cite{FrolovFursaevZelnikov1997}.
+
+\paragraph{What the checks do not reach.} A proof shows that a statement holds; it
+does not show that the statement says what the result citing it says, that the
+imported inputs and the species table's entries are the right physics, or that the
+conditions are the right ones. Table~\ref{tab:lean} in Appendix~\ref{app:formal} sets
+each result beside the section it appears in and the statements it cites. The two
+implementations, written by one
+author from one table, guard against slips of arithmetic rather than against a shared
+misreading.
+
+% =============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+Gravity's attractive sign can be read off the matter we have. Under a spectral cutoff
+in each species' own operator, the Standard Model's count is exactly \smNet{}, the
+least positive value the count can take. Its kinetic parts, \smKinetic, and its
+insertions, \smInsertion, stand at one to six for every profile of bounded variation,
+so the profile cannot change the count (the chain to the sign is proved for
+proper-time profiles, and rests on the stated expansion for others); the sign would
+reverse only under a cutoff that lowered the insertions' weight by \smMarginPct. The
+count agrees species by species with the horizon count and keeps its sign for every
+number of right-handed neutrinos. Attraction begins at \floorGenerationsSpelled{}
+generations, a floor rather than a selection, and requires the Higgs doublet's
+curvature coupling to stay below \smCouplingBound{}: any model that induces gravity
+from this content under K1 to K4 must meet both. If Newton's constant is entirely
+induced, the count becomes a condition on content: each gauge boson must be paid for by
+\matterPerBosonSpelled{} Weyl fermions or minimally coupled real scalars, and a
+conformally coupled Higgs doublet is excluded.
+
+\paragraph{Data and code availability.}
+% At release: add the archive's DOI to the SwansonIGC entry of data/references.yaml.
+Every number, table and figure in this paper is generated by the
+\texttt{induced-gravity-count} repository~\cite{SwansonIGC}, where one command reproduces them from a
+clean checkout and the Lean proofs build with the paper's numbers. Its
+\texttt{CLAIMS.md} maps each result to the computation and the Lean statements behind
+it, and its \texttt{LIMITS.md} states what is not established.
+
+\appendix
+
+%======================================================================
+\section{Setup: the regulated action and the Newton constant it induces}
+\label{app:setup}
+
+\paragraph{Spectral data.}
+Each species' fluctuation operator $D$ enters only through its spectral measure $\mu$,
+which counts eigenvalues with multiplicity. Its heat trace, and its cutoff trace under a
+profile $f$ at scale $L=\Lambda^2$, are
+\begin{equation}
+\begin{gathered}
+  \Theta(\tau)=\int e^{-\tau\lambda}\,d\mu(\lambda),\\
+  \operatorname{Tr} f(D/L)=\int f(\lambda/L)\,d\mu(\lambda).
+\end{gathered}
+\end{equation}
+For every species, $\Theta(\tau)$ is assumed to exist for all $\tau>0$ and, with
+$s=d/2-1$, to satisfy
+\begin{equation}\label{eq:heatbound}
+  \bigl|\tau^{s+1}\Theta(\tau)-a_0-a_1\tau\bigr|\le C\tau^2\qquad\text{for } 0<\tau\le\tau_0,
+\end{equation}
+the small-$\tau$ expansion of Ref.~\cite{Vassilevich2003}. In four dimensions $s=1$.
+
+\paragraph{The background.}
+The background is closed, with $\int\!\sqrt g\,R\neq0$, and a species of $N$ components
+whose operator carries the curvature term $cR$ has
+$a_1=(4\pi)^{-(s+1)}\,(N/6-c)\int\!\sqrt g\,R$~\cite{Vassilevich2003,BirrellDavies1982}.
+The non-vanishing integral makes the induced coefficient below unique.
+
+\paragraph{The coefficient at order $L^s$ (condition K4).}
+A function $T(L)$ has coefficient $b$ at order $L^s$ when, for some $A$,
+\begin{equation}\label{eq:coeff}
+  L^{-s}\bigl(T(L)-A\,L^{s+1}\bigr)\to b\qquad (L\to\infty).
+\end{equation}
+The leading term $A\,L^{s+1}$ is the cosmological one. It is removed by the definition
+and never claimed. The coefficient, when it exists, is unique, and it is linear in $T$.
+
+\paragraph{The action (condition K1) and the Newton constant.}
+Each species is cut in its own operator:
+\begin{equation}
+  W(L)=-\tfrac12\sum_{\text{species}} m\,\sigma\,\operatorname{Tr} f(D/L),
+\end{equation}
+with multiplicity $m$ and statistics sign $\sigma$. With the Euclidean convention
+$W\supset-(16\pi G)^{-1}\!\int\!\sqrt g\,R$~\cite{FrolovFursaevZelnikov1997}, the content
+induces $\kappa$ when $W$ has coefficient $-\kappa\int\!\sqrt g\,R$ at order $L^s$. Then
+$(16\pi G)^{-1}=\kappa L^s$, and gravity attracts, $G>0$, at every scale exactly when
+$\kappa>0$.
+
+\paragraph{The theorem.}
+Let $M_f=\Gamma(s)^{-1}\int_0^\infty f(u)\,u^{s-1}du$ be the profile's moment, Eq.~\eqref{eq:moment},
+normalized to the heat kernel's, so that $M_f=1$ for $f(u)=e^{-u}$. If each species' cutoff trace has
+coefficient $M_f a_1$ at order $L^s$ (proved for proper-time profiles in
+Appendix~\ref{app:abelian}), then
+\begin{equation}\label{eq:kappa}
+  \kappa=\frac{M_f\,(4\pi)^{-(s+1)}}{12}\sum_{\text{species}} m\,\sigma\,(N-6c),
+\end{equation}
+by the linearity of~\eqref{eq:coeff}. The sum is the net count. For $M_f>0$, $\kappa>0$
+exactly when the net count is positive: the profile scales the coefficient and cannot
+change its sign. $M_f>0$ holds for every proper-time profile, and for every non-increasing
+profile with finite moments that vanishes at infinity and is not identically zero.
+
+%======================================================================
+\section{The expansion, proved for proper-time profiles}
+\label{app:abelian}
+
+A proper-time profile is a Laplace transform,
+\begin{equation}
+  f(u)=\int e^{-tu}\,d\nu(t),
+\end{equation}
+of a non-zero finite measure $\nu$ carried by $(0,T]$ with $\int t^{-(s+1)}d\nu<\infty$. It
+is the regulated logarithm of every proper-time cutoff with an ultraviolet and an infrared
+end, and it contains the heat kernel's profile, $\nu=\delta_1$.
+
+\paragraph{Claim.} For such a profile, $\operatorname{Tr}f(D/L)$ has coefficient $M_f a_1$
+at order $L^s$. Nothing is assumed beyond the heat-trace bound~\eqref{eq:heatbound}.
+
+\paragraph{Proof.}
+By Fubini, $\operatorname{Tr}f(D/L)=\int\Theta(t/L)\,d\nu(t)$: the cutoff trace is the heat
+trace averaged over proper time. For $L\ge T/\tau_0$, every $t$ in the support has
+$t/L\le\tau_0$, and~\eqref{eq:heatbound} at $\tau=t/L$, multiplied by $L\,t^{-(s+1)}$,
+gives
+\begin{equation}
+  \Bigl|L^{-s}\Theta(t/L)-a_0\,L\,t^{-(s+1)}-a_1\,t^{-s}\Bigr|\le \frac{|C|\,t^{1-s}}{L}.
+\end{equation}
+Integrating against $\nu$, with $A=a_0\int t^{-(s+1)}d\nu$,
+\begin{multline}
+  \Bigl|L^{-s}\bigl(\operatorname{Tr}f(D/L)-A\,L^{s+1}\bigr)-a_1\!\int t^{-s}d\nu\Bigr|\\
+  \le\frac{|C|}{L}\int t^{1-s}d\nu\;\to\;0 .
+\end{multline}
+The moments used are finite: on $(0,T]$, $t^{-s}\le T\,t^{-(s+1)}$ and
+$t^{1-s}\le T^2\,t^{-(s+1)}$, and $\int t^{-(s+1)}d\nu$ is finite by assumption. Finally,
+the Mellin transform gives $\int_0^\infty f(u)u^{s-1}du=\Gamma(s)\int t^{-s}d\nu$, so
+$\int t^{-s}d\nu=M_f$. \hfill$\square$
+
+\noindent The rest of the formal proof establishes integrability for Fubini and for each
+moment, and is routine.
+
+%======================================================================
+\section{One to six, derived}
+\label{app:onetosix}
+
+A species' operator is its kinetic operator $D_0$ with a curvature term inserted. Under
+the cut in the species' own operator (K1), the curvature coefficient can be read in two
+ways, and the two agree for every proper-time profile.
+
+\paragraph{The full operator.}
+A constant insertion $\delta$ shifts the spectrum by $\delta$, so the heat trace of
+$D_0+\delta$ is $e^{-\tau\delta}\Theta(\tau)$. Expanding the product,
+\begin{equation}
+  \tau^{s+1}e^{-\tau\delta}\Theta(\tau)=a_0+(a_1-\delta a_0)\,\tau+O(\tau^2),
+\end{equation}
+with an explicit constant in the remainder. So the shifted operator has
+$a_1(D_0+\delta)=a_1(D_0)-\delta\,a_0(D_0)$: Gilkey's curvature term for a constant
+insertion, derived rather than imported. By Appendix~\ref{app:abelian}, its cutoff trace
+has coefficient $M_f\,(a_1-\delta a_0)$.
+
+\paragraph{The kinetic part plus the response.}
+The kinetic part is the cut in $D_0$, with coefficient $M_f a_1$. The insertion, read as the
+first-order response of the cutoff trace,
+\begin{equation}
+  \mathcal R(L)=\frac{d}{d\delta}\operatorname{Tr}f\!\left(\frac{D_0+\delta}{L}\right)\Big|_{\delta=0}
+  =-\int\frac{t}{L}\,\Theta\!\left(\frac tL\right)d\nu(t),
+\end{equation}
+has coefficient $-a_0\,\mathcal D/\Gamma(s+1)$ at order $L^s$, where
+$\mathcal D=-\int_0^\infty f'(u)\,u^s\,du$ is the profile's derivative moment. The estimate
+is the one in Appendix~\ref{app:abelian}, one power of $t$ higher. Differentiating under
+the integral takes uniform bounds, which are routine.
+
+\paragraph{The integration by parts.}
+The Mellin transform gives $\mathcal D=\Gamma(s+1)\int t^{-s}d\nu$, so
+$\mathcal D/\Gamma(s+1)=M_f$. For proper-time profiles, the integration by parts between the
+two moments is the Gamma function's recursion, $\Gamma(s+1)=s\,\Gamma(s)$.
+
+\paragraph{One to six.}
+Write $\mathcal I=(4\pi)^{-(s+1)}\int\!\sqrt g\,R$. With the kinetic operator's
+$a_1=(N/6)\,\mathcal I$ and an insertion of trace $c$, so that
+$\delta a_0=c\,\mathcal I$, both readings give
+\begin{equation}
+  M_f\,\frac{N}{6}\,\mathcal I-\delta\,a_0\,M_f=M_f\,\frac{N-6c}{6}\,\mathcal I .
+\end{equation}
+The kinetic part and the insertion stand at one to six, with the same factor $M_f$, for
+every proper-time profile. An insertion that varies over the background is not derived
+this way; for it the coefficient is Gilkey's, as imported in Appendix~\ref{app:setup}.
+
+\paragraph{Profiles of bounded variation.}
+A profile need not be differentiable; the sharp step is the obvious case. A profile of
+bounded variation can be written through its derivative measure,
+$f(u)=m_+((u,\infty))-m_-((u,\infty))$, with $m_\pm$ carried by $(0,\infty)$ and of finite
+$s$-th moment. For each side, the layer-cake formula gives
+\begin{equation}
+  \int u^s\,dm=s\int_0^\infty m((t,\infty))\,t^{s-1}dt,
+\end{equation}
+so $\int u^s\,d(m_+-m_-)=s\int_0^\infty f(u)\,u^{s-1}du$, with no derivative and no boundary
+term. The insertion's weight relative to the kinetic part is therefore six for every such
+profile with non-zero moment. What turns that weighting into the induced coefficient is the
+spectral-action expansion, which the literature states for Laplace-transform and for
+Schwartz profiles~\cite{vanSuijlekom2024,EcksteinIochum2018,EstradaGraciaBondiaVarilly1998}
+and which is taken here as a hypothesis for them, not proved. For the sharp step it holds
+beyond the leading term only as a Ces\`aro mean~\cite{EstradaGraciaBondiaVarilly1998}.
+
+%======================================================================
+\section{The counts in closed form}
+\label{app:counts}
+
+\paragraph{Conventions.}
+Fermions are counted as Weyl (two-component) fermions; Dirac and Majorana counts are
+derived from them, never entered separately. A species' field components $N$ are its
+covariant components, one per real field, the convention its heat-kernel coefficient is
+stated in. The horizon count uses a different quantity, each species' coefficient in the
+horizon's entanglement entropy in units of one real scalar (Table~\ref{tab:species}),
+which is not a count of physical degrees of freedom. Each gauge vector is counted with
+its two Faddeev--Popov ghosts, minimally coupled scalars of opposite statistics. The
+contact term is assigned to the vector, for the gauge field with its ghosts, as Kabat
+states it~\cite{Kabat1995}; no other species has one. Each of the \gaugeVectors{} vectors
+counts as one abelian gauge field, which is exact at one loop on a purely gravitational
+background.
+
+\paragraph{The closed form.}
+With the Standard Model's gauge group and its ghosts, a content of $g$ generations, $h$
+Higgs doublets and $n$ right-handed neutrinos has $\weylPerGeneration\,g+n$ Weyl fermions
+of weight \weightWeyl, $\scalarsPerDoublet\,h$ real scalars of weight \weightScalar,
+\gaugeVectors{} vectors of weight \weightVector{} and \smGhosts{} ghosts of weight
+\weightGhost. Its net count is Eq.~\eqref{eq:content},
+\begin{equation}
+  \Nnet(g,h,n)=\weylPerGeneration\,g+\scalarsPerDoublet\,h+n\smGaugeSector .
+\end{equation}
+Every statement below holds for all non-negative integers; none rests on a search.
+
+\paragraph{The floor.}
+With one doublet, $\Nnet=\weylPerGeneration\,g\genCountZero$, which is positive exactly
+when $g\ge\floorGenerations$. The values for zero to six generations are those of
+Fig.~\ref{fig:generations}.
+
+\paragraph{The least content.}
+A count of exactly one needs $\weylPerGeneration\,g+\scalarsPerDoublet\,h=\countOneNeeds$.
+Reducing modulo four, $-g\equiv1$, so $g\equiv3\pmod 4$. Then $g=3$ gives $h=1$, and
+$g\ge7$ overshoots, so three generations and one doublet is the only solution. With a
+right-handed neutrino in every generation, the condition becomes
+$(\weylPerGeneration+1)\,g+\scalarsPerDoublet\,h=\countOneNeeds$, which has no solution,
+since the left side is a multiple of four and the right side is not. As a cross-check the
+repository also searches every content with fewer than \searchedGenerations{} generations
+and fewer than \searchedDoublets{} doublets, a range that covers every possible solution;
+it finds the same.
+
+\paragraph{Right-handed neutrinos.}
+Adding $n$ of them to the Standard Model gives a count of $1+n$, a kinetic total of
+$\smKinetic-2n$ and an insertion total of $\smInsertion+3n$. So, with $\Nkin=\smKinetic$ and
+$\Nins=\smInsertion$, the threshold is $6(|\Nkin|+2n)/(\Nins+3n)$ and the margin is
+$(1+n)/(\Nins+3n)$,
+which increases with $n$. The sign never changes.
+
+\paragraph{The curvature coupling.}
+Give the doublet's \smScalars{} real scalars a common coupling $\xi$, so each has curvature
+trace $\xi$ and weight $1-6\xi$. The Standard Model's count becomes
+$\smRestWeight+\smScalars\,(1-6\xi)=1-\smCouplingSlope\,\xi$, positive exactly when
+$\xi<\smCouplingBound$. In general, a content whose other species contribute $r$ and whose
+$k$ scalars share the coupling is positive exactly when $\xi<(r+k)/(6k)$, which gives
+\nuTwoCouplingBound{} and \nuThreeCouplingBound{} with two and three right-handed
+neutrinos. A single scalar coupled on its own faces a different bound; it is the common
+coupling that gives \smCouplingBound. At the conformal coupling $\xi=1/6$ the count is
+\smConformalCount, \nuTwoConformalCount{} and \nuThreeConformalCount{} with none, two
+and three right-handed neutrinos.
+
+\paragraph{Gauge bosons.}
+A content of $k_s$ minimally coupled real scalars, $k_W$ Weyl fermions and $v$ gauge
+vectors, each with its two ghosts, has $\Nnet=k_s+k_W-\matterPerBoson\,v$. With the
+Standard Model's \smScalars, \smWeyl{} and \gaugeVectors{} this is \smNet, so $b$ further
+vectors and $k$ further scalars or Weyl fermions give $1+k-\matterPerBoson\,b$, which is
+positive exactly when $k\ge\matterPerBoson\,b$, since both sides are integers.
+
+\paragraph{The horizon identity.}
+Over any content built from the four species, the horizon count, entanglement
+coefficients plus contact terms, differs from the induced count by
+\begin{equation}
+  (\text{entanglement}+\text{contact})-\Nnet=n_{\text{ghost}}-2\,n_{\text{vector}} .
+\end{equation}
+So the two agree exactly when every vector carries its two ghosts, which is condition K2.
+For the Standard Model they read \smEntanglement{} and \smContact, a net of \smNet. That the
+horizon count \emph{should} equal the induced one is the proportionality between horizon
+entropy and the induced coupling~\cite{LarsenWilczek1996,FrolovFursaevZelnikov1997}, which
+is cited here, not proved.
+
+%======================================================================
+\section{The magnitude}
+\label{app:magnitude}
+
+% The Lean table is set here, a page early, so that it floats ahead of the references.
+\begin{table*}
+\caption{The results that cite Lean: each result's key in the repository's
+\texttt{CLAIMS.md}, the section in which it appears, and the Lean statements it cites.}
+\label{tab:lean}
+\centering
+\small
+\input{../../build/latex/tables/lean.tex}
+\end{table*}
+
+In four dimensions, Eq.~\eqref{eq:kappa} gives $(16\pi G)^{-1}=M_f\,\Nnet\,L/(192\pi^2)$, so
+a content of net count $\Nnet$ induces $G=M_P^{-2}$ exactly when
+\begin{equation}
+  \Lambda=M_P\sqrt{\frac{12\pi}{M_f\,\Nnet}} .
+\end{equation}
+The normalized moment is $1/\Gamma(s+1)$ for the sharp step $\theta(1-u)$, $1$ for the
+heat kernel's profile, and $\Gamma(s/2)/(2\Gamma(s))$ for the Gaussian $e^{-u^2}$. In four
+dimensions these are $1$, $1$ and $\sqrt\pi/2\approx\momentGaussian$. For the Standard
+Model this gives \smCutoffLow{} to \smCutoffHigh\,$M_P$ (Table~\ref{tab:magnitude}). The
+heat kernel's profile is a proper-time profile, so its row rests on
+Appendix~\ref{app:abelian}; the Gaussian's rests on the imported expansion for Schwartz
+profiles; and the sharp step's rests on an expansion that holds beyond the leading term
+only as a Ces\`aro mean (Appendix~\ref{app:onetosix}). The integration by parts, and these
+moments, are also checked numerically in the repository against the closed forms, at
+$s=1$ and $s=2$, with the quadrature's tolerance checked again in a second software environment with
+independently installed library versions. The magnitude moves with the profile; the sign does not.
+
+%======================================================================
+\section{The formal statements}
+\label{app:formal}
+
+Every result in Appendices~\ref{app:setup}--\ref{app:magnitude} is proved in Lean~4
+against Mathlib, in the repository's Lean library, under the checks described in
+Sec.~\ref{sec:lean}; imported results enter only as hypotheses the theorems take.
+Table~\ref{tab:lean} lists every result of the main text that cites Lean: its key in
+the repository's \texttt{CLAIMS.md}, where its wording and evidence are given; the
+section of this paper in which it appears; and the Lean statements it cites.
+
+\bibliography{../../build/latex/refs}
+
+\end{document}

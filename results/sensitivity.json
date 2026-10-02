@@ -1,0 +1,56 @@
+{
+  "neutrino_rows": {
+    "0_extra_neutrinos": {
+      "right_handed_neutrinos": 0,
+      "net": "1",
+      "threshold": "124/21",
+      "margin": "1/63",
+      "coupling_bound": "1/24",
+      "conformal_count": "-3"
+    },
+    "2_extra_neutrinos": {
+      "right_handed_neutrinos": 2,
+      "net": "3",
+      "threshold": "132/23",
+      "margin": "1/23",
+      "coupling_bound": "1/8",
+      "conformal_count": "-1"
+    },
+    "3_extra_neutrinos": {
+      "right_handed_neutrinos": 3,
+      "net": "4",
+      "threshold": "17/3",
+      "margin": "1/18",
+      "coupling_bound": "1/6",
+      "conformal_count": "0"
+    }
+  },
+  "magnitude": {
+    "moments": {
+      "sharp_step": 1.0,
+      "heat_kernel": 1.0,
+      "gaussian": 0.8862269254527579
+    },
+    "cutoff_over_planck": {
+      "0_extra_neutrinos": {
+        "sharp_step": 6.139960247678931,
+        "heat_kernel": 6.139960247678931,
+        "gaussian": 6.522184635667131
+      },
+      "2_extra_neutrinos": {
+        "sharp_step": 3.5449077018110318,
+        "heat_kernel": 3.5449077018110318,
+        "gaussian": 3.7655850551068593
+      },
+      "3_extra_neutrinos": {
+        "sharp_step": 3.0699801238394655,
+        "heat_kernel": 3.0699801238394655,
+        "gaussian": 3.2610923178335653
+      }
+    },
+    "standard_model_range": [
+      6.139960247678931,
+      6.522184635667131
+    ]
+  }
+}
