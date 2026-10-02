@@ -310,9 +310,9 @@ SwansonIGC:
   publisher: "Zenodo"
   version: "0.1.0"
   url: "https://github.com/davidtswanson903/induced-gravity-count"
+  doi: "10.5281/zenodo.23109993"
   year: 2026
   note: >
-    This repository, the source of every number in the paper. Its archived release has
-    a DOI, given in the `doi` field here and in `.zenodo.json` once the archive exists;
-    until then the entry cites the repository's address. Not listed in the related-work
-    document, which lists sources outside it.
+    This repository, the source of every number in the paper, as archived at its
+    initial release (version 0.1.0). Not listed in the related-work document, which
+    lists sources outside it.

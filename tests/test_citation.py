@@ -36,3 +36,7 @@ def test_zenodo_cff_bibliography_and_package_agree():
 def test_self_citation_is_cited_and_kept_out_of_related_work():
     assert "\cite{SwansonIGC}" in (ROOT / "paper" / "draft" / "paper.tex").read_text(encoding="utf-8")
     assert "SwansonIGC" not in (ROOT / "docs" / "related-work.md").read_text(encoding="utf-8")
+
+
+def test_doi_agrees_between_cff_and_bibliography():
+    assert _cff()["doi"] == table.load_references()["SwansonIGC"]["doi"]

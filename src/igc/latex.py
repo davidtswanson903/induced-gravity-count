@@ -230,8 +230,9 @@ def refs_bib() -> str:
         lines.append(f"  title = {{{{{tex_escape(r['title'])}}}}},")
         if r["type"] == "misc":
             # revtex prints a @misc's howpublished, not its publisher or version.
+            doi = f", \\url{{https://doi.org/{r['doi']}}}" if r.get("doi") else ""
             lines.append(f"  howpublished = {{{tex_escape(r['publisher'])}, version "
-                         f"{tex_escape(r['version'])}}},")
+                         f"{tex_escape(r['version'])}{doi}}},")
         for field in ("journal", "volume", "url", "doi"):
             if r.get(field):
                 lines.append(f"  {field} = {{{tex_escape(r[field]) if field not in ('doi', 'url') else r[field]}}},")
